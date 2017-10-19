@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include "string"
 #include "iostream"
+#include "ctime"
+#include "sstream"
 using namespace std;
 
 void default_board();
@@ -11,24 +13,29 @@ void show_board();
 void put_chess(short, short, short);
 bool winner(short i, short j, short whosturn);
 void multiplayer();
+string computerplayer();
 
 int board[17][17];
 bool endtry;
+int mode = 1;
 
 int main()
 {
-	cout << "遊戲名稱：五子棋(雙打)" << endl
-		<< "　　版本：1.0" << endl
+	cout << "遊戲名稱：五子棋" << endl
+		<< "　　版本：2.0" << endl
+		<<"輸入pve或pvp可切換模式。"
 		<< endl;
 	string choose;
-	int i;
 	system("Pause");
-		do {
+	modeone:
 			default_board();
 			multiplayer();
 			cout << "輸入 y 再玩一次？：";
 			getline(cin, choose);
-		} while (choose == "y" || choose == "Y");
+			if (choose == "y" || choose == "Y")
+			{
+				goto modeone;
+			}
 	return 0;
 }
 
@@ -356,7 +363,7 @@ void show_chess() {
 
 void put_chess(short i, short j, short whosturn) {
 	if (i == 0 || i >= 16 || j == 0 || j >= 16) {
-		cout << "下棋的範圍超出格子外！" << endl;
+		cout <<i<<" "<<j<< "下棋的範圍超出格子外！" << endl;
 		endtry = 0;
 		system("pause");
 	}
@@ -420,13 +427,26 @@ nextstep:
 	if (whosturn == 1) {
 		cout << "○換黑子下：";
 	}
-	else {
+	else
+	{
 		cout << "●換白子下：";
 	}
-	getline(cin, keyin);
+	if (whosturn == 2 && mode ==2)
+	{
+		keyin = computerplayer();
+	}
+	else
+		getline(cin, keyin);
 	if (keyin == "pve")
 	{
 		cout << "切換為PVE模式:" << endl;
+		mode = 2 ;
+		system("pause");
+		goto nextstep;
+	}
+	else if (keyin == "pvp") {
+		cout << "切換為PVP模式:" << endl;
+		mode = 1;
 		system("pause");
 		goto nextstep;
 	}
@@ -463,4 +483,17 @@ nextstep:
 	}
 }
 
+string computerplayer() {
+	srand(time(NULL));
+	int x;
+	int y;
+	x = rand() % 15 + 1;
+	y = rand() % 15 + 1;
+	stringstream ss;
+	ss << x;
+	string re;
+	ss >> re;
+	re = re + (char)(y + 64);
+	return re;
 
+}
