@@ -11,7 +11,7 @@ using namespace std;
 void default_board();
 void show_board();
 void put_chess(short, short, short);
-bool winner(short i, short j, short whosturn);
+bool winner(short i, short j, short whosturn,short mode);
 void multiplayer();
 string computerplayer();
 
@@ -378,37 +378,61 @@ void put_chess(short i, short j, short whosturn) {
 
 }
 
-bool winner(short i, short j, short whosturn) {
+bool winner(short i, short j, short whosturn,short mode) {
 	short count, tempi, tempj;
 	bool win = 0;
+	short score=0;
 	//←→ 
 	count = 1;
 	tempi = i;
-	while (board[--tempi][j] == whosturn) { count++; }
+	while (board[--tempi][j] == whosturn) {
+		count++; 
+	}
 	tempi = i;
-	while (board[++tempi][j] == whosturn) { count++; }
+	while (board[++tempi][j] == whosturn) {
+		count++; 
+	}
 	if (count >= 5) { win = 1; goto winner_check_end; }
+	score += count;
 	//↑↓ 
 	count = 1;
 	tempj = j;
-	while (board[i][--tempj] == whosturn) { count++; }
+	while (board[i][--tempj] == whosturn) { 
+		count++; 
+	}
 	tempj = j;
-	while (board[i][++tempj] == whosturn) { count++; }
+	while (board[i][++tempj] == whosturn) { 
+		count++; 
+	}
 	if (count >= 5) { win = 1; goto winner_check_end; }
+	score += count;
 	//↖↘ 
 	count = 1;
 	tempi = i, tempj = j;
-	while (board[--tempi][--tempj] == whosturn) { count++; }
+	while (board[--tempi][--tempj] == whosturn) {
+		count++; 
+	}
 	tempi = i, tempj = j;
-	while (board[++tempi][++tempj] == whosturn) { count++; }
+	while (board[++tempi][++tempj] == whosturn) { 
+		count++; 
+	}
 	if (count >= 5) { win = 1; goto winner_check_end; }
+	score += count;
 	//↙↗ 
 	count = 1;
 	tempi = i, tempj = j;
-	while (board[++tempi][--tempj] == whosturn) { count++; }
+	while (board[++tempi][--tempj] == whosturn) { 
+		count++; 
+	}
 	tempi = i, tempj = j;
-	while (board[--tempi][++tempj] == whosturn) { count++; }
+	while (board[--tempi][++tempj] == whosturn) { 
+		count++;
+	}
 	if (count >= 5) { win = 1; goto winner_check_end; }
+	score += count;
+	if (mode == 2) {
+		return score ;
+	}
 winner_check_end:
 	return win;
 }
@@ -437,14 +461,14 @@ nextstep:
 	}
 	else
 		getline(cin, keyin);
-	if (keyin == "pve")
+	if (keyin == "pve" && mode ==1 )
 	{
 		cout << "切換為PVE模式:" << endl;
 		mode = 2 ;
 		system("pause");
 		goto nextstep;
 	}
-	else if (keyin == "pvp") {
+	else if (keyin == "pvp" && mode == 2) {
 		cout << "切換為PVP模式:" << endl;
 		mode = 1;
 		system("pause");
@@ -471,15 +495,19 @@ nextstep:
 	}
 	put_chess(I, J, whosturn);
 	if (endtry == 0) { goto nextstep; }
-	endtry = winner(I, J, whosturn);
+	endtry = winner(I, J, whosturn,1);
 	whosturn = (whosturn == 1 ? 2 : 1);
 	if (endtry == 0) { goto nextstep; }
 	else {
 		whosturn = (whosturn == 1 ? 2 : 1);
 		system("cls");
 		show_board();
-		if (whosturn == 1) { cout << "黑棋贏了！" << endl; }
-		else { cout << "白棋贏了！" << endl; }
+		if (whosturn == 1) {
+			cout << "黑棋贏了！" << endl; 
+		}
+		else {
+			cout << "白棋贏了！" << endl; 
+		}
 	}
 }
 
@@ -495,5 +523,5 @@ string computerplayer() {
 	ss >> re;
 	re = re + (char)(y + 64);
 	return re;
-
+	
 }
