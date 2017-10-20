@@ -6,12 +6,14 @@
 #include "iostream"
 #include "ctime"
 #include "sstream"
+#include "windows.h"
 using namespace std;
 
 void default_board();
 void show_board();
 void put_chess(short, short, short);
-bool winner(short i, short j, short whosturn,short mode);
+bool winner(short i, short j, short whosturn);
+int score(short i, short j, short whosturn);
 void multiplayer();
 string computerplayer();
 
@@ -22,7 +24,7 @@ int mode = 1;
 int main()
 {
 	cout << "遊戲名稱：五子棋" << endl
-		<< "　　版本：2.0" << endl
+		<< "　　版本：3.0" << endl
 		<<"輸入pve或pvp可切換模式。"
 		<< endl;
 	string choose;
@@ -363,14 +365,14 @@ void show_chess() {
 
 void put_chess(short i, short j, short whosturn) {
 	if (i == 0 || i >= 16 || j == 0 || j >= 16) {
-		cout <<i<<" "<<j<< "下棋的範圍超出格子外！" << endl;
+		cout <<i<<" "<<(char)(j + 64) << "下棋的範圍超出格子外！" << endl;
 		endtry = 0;
-		system("pause");
+		Sleep(1000);
 	}
 	else if (board[i][j] == 1 || board[i][j] == 2) {
-		cout << "此位置已經有棋子了！" << endl;
+		cout << i<<" "<<(char)(j+64)<<"此位置已經有棋子了！" << endl;
 		endtry = 0;
-		system("pause");
+		Sleep(1000);
 	}
 	else {
 		board[i][j] = whosturn;
@@ -378,7 +380,7 @@ void put_chess(short i, short j, short whosturn) {
 
 }
 
-bool winner(short i, short j, short whosturn,short mode) {
+bool winner(short i, short j, short whosturn) {
 	short count, tempi, tempj;
 	bool win = 0;
 	short score=0;
@@ -430,11 +432,44 @@ bool winner(short i, short j, short whosturn,short mode) {
 	}
 	if (count >= 5) { win = 1; goto winner_check_end; }
 	score += count;
-	if (mode == 2) {
-		return score ;
-	}
 winner_check_end:
 	return win;
+}
+
+int score(short i, short j, short whosturn) {
+	short count, tempi, tempj;
+	int snc[6] = { 0,1,10,50,1000,10000 };
+	int score = 0;
+	//←→ 
+	count = 1;
+	tempi = i;
+	while (board[--tempi][j] == whosturn) {count++;}
+	tempi = i;
+	while (board[++tempi][j] == whosturn) {count++;}
+	score += snc[count];
+	//↑↓ 
+	count = 1;
+	tempj = j;
+	while (board[i][--tempj] == whosturn) {count++;}
+	tempj = j;
+	while (board[i][++tempj] == whosturn) {count++;}
+	score += snc[count];
+	//↖↘ 
+	count = 1;
+	tempi = i, tempj = j;
+	while (board[--tempi][--tempj] == whosturn) {count++;}
+	tempi = i, tempj = j;
+	while (board[++tempi][++tempj] == whosturn) {count++;}
+	score += snc[count];
+	//↙↗ 
+	count = 1;
+	tempi = i, tempj = j;
+	while (board[++tempi][--tempj] == whosturn) {count++;}
+	tempi = i, tempj = j;
+	while (board[--tempi][++tempj] == whosturn) {count++;}
+	score += snc[count];
+	
+	return score;
 }
 
 void multiplayer() {
@@ -474,7 +509,7 @@ nextstep:
 		system("pause");
 		goto nextstep;
 	}
-	for (int n = 0; n<keyin.length(); n++) {//處理字串keyin 
+	for (int n = 0; n<keyin.length(); n++) {          //處理字串keyin 
 		if (keyin[n] >= 'a' && keyin[n] <= 'o') {
 			J = keyin[n] - 'a' + 1;
 		}
@@ -495,7 +530,7 @@ nextstep:
 	}
 	put_chess(I, J, whosturn);
 	if (endtry == 0) { goto nextstep; }
-	endtry = winner(I, J, whosturn,1);
+	endtry = winner(I, J, whosturn);
 	whosturn = (whosturn == 1 ? 2 : 1);
 	if (endtry == 0) { goto nextstep; }
 	else {
@@ -513,15 +548,30 @@ nextstep:
 
 string computerplayer() {
 	srand(time(NULL));
-	int x;
-	int y;
-	x = rand() % 15 + 1;
-	y = rand() % 15 + 1;
+	int x=1, y=1;
+	int pscore, escore,hscore =0,tscore;
+	int rd;
+	for (int i = 1; i < 16; i++) {
+		for (int j = 1; j < 16; j++) {
+			pscore = score(i, j, 1);
+			escore = score(i, j, 2);
+			tscore = pscore + escore;
+			if (tscore > hscore) {        //該點電腦權重+玩家權重=總權重
+				hscore = tscore;
+				x = i;
+				y = j;
+			}
+		}
+	}
+	while (board[x][y] == 1 || board[x][y] == 2)
+	{
+		x = x + rand() % 3 - 1;
+		y = y + rand() % 3 - 1;
+	}
 	stringstream ss;
 	ss << x;
 	string re;
 	ss >> re;
 	re = re + (char)(y + 64);
 	return re;
-	
 }

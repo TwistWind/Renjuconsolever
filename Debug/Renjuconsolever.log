@@ -1,5 +1,6 @@
 ﻿  Renjuconsolever.cpp
-c:\users\twistwind\documents\github\renjuconsolever\renjuconsolever.cpp(453): warning C4018: '<': signed/unsigned mismatch
-c:\users\twistwind\documents\github\renjuconsolever\renjuconsolever.cpp(487): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\twistwind\documents\github\renjuconsolever\renjuconsolever.cpp(512): warning C4018: '<': signed/unsigned mismatch
+c:\users\twistwind\documents\github\renjuconsolever\renjuconsolever.cpp(550): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\twistwind\documents\github\renjuconsolever\renjuconsolever.cpp(553): warning C4101: 'rd': unreferenced local variable
   Renjuconsolever.vcxproj -> C:\Users\TwistWind\Documents\GitHub\Renjuconsolever\Debug\Renjuconsolever.exe
   Renjuconsolever.vcxproj -> C:\Users\TwistWind\Documents\GitHub\Renjuconsolever\Debug\Renjuconsolever.pdb (Partial PDB)
