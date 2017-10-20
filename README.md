@@ -1,2 +1,2 @@
 # Renjuconsolever
-Renju ver.console 1.0
+Renju ver.console 
