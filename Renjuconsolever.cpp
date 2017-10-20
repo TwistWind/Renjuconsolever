@@ -41,7 +41,7 @@ int main()
 	return 0;
 }
 
-void default_board() {
+void default_board() {									//定義棋盤
 	for (int i = 0; i < 16; i++) {
 		for (int j = 0; j < 16; j++) {
 			if (i == 0 && j == 0) {
@@ -88,7 +88,7 @@ void default_board() {
 }
 
 
-void show_board() {
+void show_board() {								//頁面刷新用
 	for (int i = 0; i <= 16; i++) {
 		for (int j = 0; j <= 16; j++) {
 			switch (board[i][j]) {
@@ -225,7 +225,7 @@ void show_board() {
 	}
 }
 
-void show_chess() {
+void show_chess() {										//頁面刷新用
 	for (int i = 0; i <= 16; i++) {
 		for (int j = 0; j <= 16; j++) {
 			switch (board[i][j]) {
@@ -363,7 +363,7 @@ void show_chess() {
 	}
 }
 
-void put_chess(short i, short j, short whosturn) {
+void put_chess(short i, short j, short whosturn) {						//確認輸入值合法
 	if (i == 0 || i >= 16 || j == 0 || j >= 16) {
 		cout <<i<<(char)(j + 64) << "下棋的範圍超出格子外！" << endl;
 		endtry = 0;
@@ -380,7 +380,7 @@ void put_chess(short i, short j, short whosturn) {
 
 }
 
-bool winner(short i, short j, short whosturn) {
+bool winner(short i, short j, short whosturn) {      //勝負判定
 	short count, tempi, tempj;
 	bool win = 0;
 	short score=0;
@@ -436,7 +436,7 @@ winner_check_end:
 	return win;
 }
 
-int score(short i, short j, short whosturn) {
+int score(short i, short j, short whosturn) {                //權重計算
 	short count, tempi, tempj;
 	int snc[6] = { 0,1,10,50,1000,10000 };
 	int score = 0;
@@ -472,7 +472,7 @@ int score(short i, short j, short whosturn) {
 	return score;
 }
 
-void multiplayer() {
+void multiplayer() {									//座標輸入、處理。
 	string keyin;
 	short whosturn = 1, I, J;
 	system("cls");
@@ -509,7 +509,7 @@ nextstep:
 		system("pause");
 		goto nextstep;
 	}
-	for (int n = 0; n<keyin.length(); n++) {          //處理字串keyin 
+	for (int n = 0; n<keyin.length(); n++) {          //處理字串 
 		if (keyin[n] >= 'a' && keyin[n] <= 'o') {
 			J = keyin[n] - 'a' + 1;
 		}
@@ -523,7 +523,7 @@ nextstep:
 			continue;
 		}
 		else {
-			cout << "輸入了不合法的字元！" << endl;
+			cout << "無法使用此字元！" << endl;
 			system("pause");
 			goto nextstep;
 		}
@@ -546,10 +546,10 @@ nextstep:
 	}
 }
 
-string computerplayer() {
+string computerplayer() {                      //用權重讓電腦判斷該下哪個點
 	srand(time(NULL));
-	int x=1, y=1;
-	int pscore, escore,hscore =0,tscore;
+	int x=1, y=1;								//回傳用座標(x,y)
+	int pscore, escore,hscore =0,tscore;        //people-score ; Enviroment-score; highest-score ; total-score
 	int rd;
 	for (int i = 1; i < 16; i++) {
 		for (int j = 1; j < 16; j++) {
@@ -562,7 +562,7 @@ string computerplayer() {
 					x = i;
 					y = j;
 				}
-				if (tscore == hscore) {        //該點電腦權重+玩家權重=總權重
+				if (tscore == hscore) {        
 					rd = rand() % 2+1;
 					if (rd == 1) {
 						hscore = tscore;
@@ -573,7 +573,7 @@ string computerplayer() {
 			}
 		}
 	}
-	stringstream ss;
+	stringstream ss;									//組裝成string類型
 	ss << x;
 	string re;
 	ss >> re;
