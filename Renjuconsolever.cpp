@@ -24,7 +24,7 @@ int mode = 1;
 int main()
 {
 	cout << "遊戲名稱：五子棋" << endl
-		<< "　　版本：3.0" << endl
+		<< "　　版本：3.1" << endl
 		<<"輸入pve或pvp可切換模式。"
 		<< endl;
 	string choose;
@@ -365,12 +365,12 @@ void show_chess() {
 
 void put_chess(short i, short j, short whosturn) {
 	if (i == 0 || i >= 16 || j == 0 || j >= 16) {
-		cout <<i<<" "<<(char)(j + 64) << "下棋的範圍超出格子外！" << endl;
+		cout <<i<<(char)(j + 64) << "下棋的範圍超出格子外！" << endl;
 		endtry = 0;
 		Sleep(1000);
 	}
 	else if (board[i][j] == 1 || board[i][j] == 2) {
-		cout << i<<" "<<(char)(j+64)<<"此位置已經有棋子了！" << endl;
+		cout <<i<<(char)(j+64)<<"此位置已經有棋子了！" << endl;
 		endtry = 0;
 		Sleep(1000);
 	}
@@ -553,20 +553,25 @@ string computerplayer() {
 	int rd;
 	for (int i = 1; i < 16; i++) {
 		for (int j = 1; j < 16; j++) {
-			pscore = score(i, j, 1);
-			escore = score(i, j, 2);
-			tscore = pscore + escore;
-			if (tscore > hscore) {        //該點電腦權重+玩家權重=總權重
-				hscore = tscore;
-				x = i;
-				y = j;
+			if (board[i][j] != 1 && board[i][j] != 2) {
+				pscore = score(i, j, 1);
+				escore = score(i, j, 2);
+				tscore = pscore + escore;
+				if (tscore > hscore) {        //該點電腦權重+玩家權重=總權重
+					hscore = tscore;
+					x = i;
+					y = j;
+				}
+				if (tscore == hscore) {        //該點電腦權重+玩家權重=總權重
+					rd = rand() % 2+1;
+					if (rd == 1) {
+						hscore = tscore;
+						x = i;
+						y = j;
+					}
+				}
 			}
 		}
-	}
-	while (board[x][y] == 1 || board[x][y] == 2)
-	{
-		x = x + rand() % 3 - 1;
-		y = y + rand() % 3 - 1;
 	}
 	stringstream ss;
 	ss << x;
